@@ -1,0 +1,5 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import {helperConfigured,validateAdvice,helperAdvice} from '../lib/helper.js';
+test('helper advice is bounded, anchored to observed fields and CSS viewport',()=>{const snapshot={elements:[{id:'e1',kind:'type'}],viewport:{width:100,height:80}};const advice=validateAdvice({values:[{target:'e1',text:'Hello'},{target:'missing',text:'Bad'}],points:[{x:20,y:30,label:'Menu'},{x:120,y:30,label:'Offscreen'},{x:NaN,y:1,label:'Invalid'}],nextStep:'Fill message',complete:true,evidence:'Message filled'},snapshot);assert.equal(advice.generatedValues.length,1);assert.equal(advice.visualTargets.length,1);assert.equal(advice.complete,true);});
+test('helper is opt-in and remote helper endpoints require HTTPS',async()=>{assert.equal(helperConfigured({}),false);assert.equal(helperConfigured({HELPER_BASE_URL:'http://localhost:11434/v1',HELPER_MODEL:'local'}),true);await assert.rejects(helperAdvice('goal',{elements:[]},[],undefined,new AbortController().signal,{HELPER_BASE_URL:'http://evil.example/v1',HELPER_MODEL:'test'}),/HTTPS/);});

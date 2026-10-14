@@ -1,0 +1,8 @@
+// Exercises the local application's supported API, using its paired companion.
+const base='http://localhost:3210';
+const api=async(path,body)=>{const response=await fetch(base+'/api/'+path,body?{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)}:{});const data=await response.json();if(!response.ok)throw Error(data.error||'HTTP '+response.status);return data;};
+let state=await api('state');for(let i=0;i<80&&!state.browsers.some(b=>b.version>=3);i++){await new Promise(r=>setTimeout(r,500));state=await api('state');}console.log(JSON.stringify({configured:state.configured,browsers:state.browsers.map(b=>({name:b.name,version:b.version}))}));
+const browser=state.browsers.find(b=>b.version>=3);if(!browser)throw Error('No current companion connected');
+const started=await api('run',{browserId:browser.id,mode:'new-tab',url:base+'/fixture',goal:'Fill email: alex@example.com; then extract the pricing table. Do not submit any form. Do not navigate away.',maxSteps:20,livePreview:true});
+console.log('Started local browser smoke test');
+for(let i=0;i<120;i++){await new Promise(r=>setTimeout(r,500));const current=await api('state'),run=current.runs.find(r=>r.id===started.id);if(run.released){console.log(JSON.stringify({status:run.status,steps:run.step,actions:run.history.map(a=>({operation:a.operation,outcome:a.outcome,reason:a.reason})),results:run.results.map(r=>({title:r.title,tables:r.tables})),events:run.events.map(e=>e.message)}));if(run.status!=='completed'||!run.results.length||!run.history.some(a=>a.operation==='TYPE'&&a.outcome==='executed'))process.exitCode=1;break;}if(i===119){await api('stop',{id:run.id});throw Error('Smoke test timed out');}}

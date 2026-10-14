@@ -1,0 +1,30 @@
+{
+  "manifest_version": 3,
+  "name": "Jev Browser Companion",
+  "version": "0.3.0",
+  "description": "Run Jev tasks in background tabs with visible activity and automatic user takeover.",
+  "minimum_chrome_version": "125",
+  "permissions": [
+    "tabs",
+    "debugger",
+    "scripting",
+    "storage",
+    "alarms",
+    "downloads"
+  ],
+  "host_permissions": [
+    "http://*/*",
+    "https://*/*"
+  ],
+  "background": {
+    "service_worker": "background.js",
+    "type": "module"
+  },
+  "action": {
+    "default_title": "Connect Jev",
+    "default_popup": "connect.html"
+  },
+  "content_security_policy": {
+    "extension_pages": "script-src 'self'; object-src 'self'; connect-src ws://localhost:3210 http://localhost:3210"
+  }
+}

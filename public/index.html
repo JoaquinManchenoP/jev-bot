@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="en">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Jev — Your browser assistant</title><link rel="stylesheet" href="/style.css"></head>
+<body>
+<header class="topbar"><a class="brand" href="/"><span class="logo">j</span> Jev <span class="brand-note">Your browser assistant</span></a><div class="top-actions"><span id="connection-status" role="status">Connecting…</span><button id="setup-nav" class="secondary">Settings & connections</button></div></header>
+<main id="workspace">
+<div id="notice" role="status" hidden></div>
+<div class="workspace-grid">
+<section class="chat-panel" aria-label="Chat with Jev">
+<div class="panel-heading"><h1>Let’s get it done.</h1><label class="history-picker">Conversation<select id="history"><option>No tasks yet</option></select></label></div>
+<div id="conversation" class="conversation" role="log" aria-label="Conversation"><article class="message assistant welcome"><span class="message-author">Jev</span><h2>What would you like me to do?</h2><p>Tell me which website to use and what you need. Watch me work in the browser beside this chat.</p></article></div>
+<form id="task-form" class="composer">
+<label class="sr-only" for="goal">Message Jev</label><textarea id="goal" maxlength="8000" placeholder="Ask Jev to browse, fill a form, or collect information…" required></textarea>
+<div class="examples"><button type="button" data-example="form">Try a form</button><button type="button" data-example="research">Find headlines</button><button type="button" data-example="extract">Collect a table</button></div>
+<div id="attached-files" role="status"></div>
+<div class="composer-footer"><label class="attach-button" for="attachments">＋ Attach files<input id="attachments" class="sr-only" type="file" multiple></label><button type="button" id="options-toggle" class="text-button" aria-expanded="false">Task options</button><button class="primary" id="run-button">Send ↑</button></div>
+<details id="task-options"><summary class="sr-only">Task options</summary><div class="target-row"><label>Browser<select id="browser" required><option value="">No browser connected</option></select></label><label>Work in<select id="mode"><option value="new-tab">New background tab</option><option value="new-window">Separate background window</option><option value="existing">An existing tab</option></select></label></div><label id="url-wrap">Starting page (optional)<input id="url" type="url" placeholder="https://example.com"></label><label id="tab-wrap" hidden>Background tab<select id="tab"></select></label><div class="advanced-options"><label class="check-option"><input id="live-preview" type="checkbox" checked> Show browser actions</label><label class="check-option"><input id="use-helper" type="checkbox"> Text assistance <span id="helper-label"></span></label><label class="check-option"><input id="use-vision" type="checkbox" disabled> Visual assistance</label><label>Step budget<select id="max-steps"><option value="100">100 steps</option><option value="200">200 steps</option><option value="300">300 steps</option></select></label></div><p class="hint">Attach up to 20 files, 10 MB each. Only attached files can be uploaded.</p></details>
+<p id="composer-hint" class="hint">Enter to send · Shift+Enter for a new line</p>
+</form>
+</section>
+<section class="browser-panel" aria-label="Watch the browser">
+<div class="panel-heading"><div><h2>Watch Jev work</h2><span id="step" class="hint">A live view of the browser</span></div><span id="run-status" class="status-pill">Ready</span></div>
+<div id="activity-empty" class="browser-empty"><span class="browser-icon">↗</span><h3>Your browser, in view.</h3><p>Each action shows a pointer and target highlight.<br>You can review recent before-and-after views.</p><button id="try-fixture" class="secondary">Try the local playground</button></div>
+<div id="activity-running" hidden>
+<div class="browser-address"><span>◉</span><span id="browser-address">Preparing browser…</span></div>
+<div id="preview-wrap" hidden><img id="page-preview" alt="Browser action preview"><div class="preview-caption"><span id="preview-label">Live browser view</span><button id="return-live" class="text-button" hidden>Return to live view</button></div></div>
+<div id="preview-pending" class="browser-empty compact"><p>Preparing your page. Progress appears in the chat.</p></div>
+<div id="visual-timeline" class="visual-timeline" aria-label="Recent browser action views"></div>
+<div class="run-controls"><button id="takeover" class="secondary">Take over ↗</button><button id="resume" class="primary" hidden>Resume</button><button id="stop" class="stop" hidden>Stop</button></div>
+<p class="hint browser-hint">Watch here while Jev works in a background tab. Taking over pauses the task.</p>
+<details class="activity-details"><summary>Action log & task steps</summary><strong id="run-title"></strong><ol id="plan" aria-label="Task steps"></ol><div id="events"></div><a id="run-url" target="_blank" rel="noopener" hidden>Open a copy of this page ↗</a></details>
+</div>
+</section>
+</div>
+<section class="results-card"><details id="results-details"><summary>Saved information <span id="result-count">0 pages</span></summary><div class="results-tools"><button id="export-json" class="secondary" disabled>Export JSON ↓</button><button id="export-csv" class="secondary" disabled>Export tables CSV ↓</button></div><div id="results"><p class="hint">Collected text, links, tables, and downloads appear here.</p></div></details></section>
+<section class="setup-card" id="setup" hidden><div class="panel-heading"><h2>Settings & connections</h2><button id="setup-toggle" class="text-button">Close ✕</button></div><div id="setup-details"><p id="key-status"></p><p id="helper-status" class="hint"></p><ol><li>Load the project’s <code>extension</code> folder from your browser’s extensions page using <strong>Developer mode → Load unpacked</strong>. If already installed, click <strong>Reload</strong> after updating Jev.</li><li>Open the Jev companion, name your browser, and paste the connection token below.</li><li>If your API key is missing, add <code>TYPESAFE_API_KEY</code> to <code>.env</code> and restart the server.</li></ol><div class="token-row"><input id="token" readonly type="password" aria-label="Browser connection token"><button id="copy-token" class="secondary">Copy token</button></div><p class="hint">Pairing is remembered. Page content is sent to TypeSafe for decisions. Optional assistance uses your configured helper provider.</p></div></section>
+<footer>Local workspace · You can stop or take over at any time.<span>Jev v0.3</span></footer>
+</main><script src="/app.js"></script>
+</body></html>
